@@ -3,6 +3,7 @@ Use this plugin for auto add show/hide to table columns. This plugin will append
 
 The visible status will be persistant because it will store status in localStorage. So, if after hide a column, if user refresh (F5) the browser, the hidden columns will still be hidden.
 
+## Screenshot ##
 ![Sample jQuery Column Toggle Usage](http://bloghoctap.com/employee-column-toggle.png)
 
 ## Installation ##
