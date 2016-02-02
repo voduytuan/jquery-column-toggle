@@ -10,7 +10,7 @@
             toggleContainerClass: 'columntoggle-container',
 
             //Text in column toggle box
-            toggleLabel: 'Ẩn / Hiện cột: ',
+            toggleLabel: 'Show/Hide columns: ',
 
             //the prefix of key in localstorage
             keyPrefix: 'columntoggle-',
