@@ -76,6 +76,11 @@
 
         return this.each( function() {
 
+            //Detect to prevent add more togglebox to a table (ussally from react didUpdate)
+            if ($(this).next().hasClass(settings.toggleContainerClass)) {
+                $(this).next().remove();
+            }
+            
             var table = $(this);
 
             //find table header to extract columns
