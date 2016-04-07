@@ -8,6 +8,9 @@
         var settings = $.extend({
             //Class of column toggle contains toggle link
             toggleContainerClass: 'columntoggle-container',
+            
+            //Default column toggle ID
+            toggleContainerId: 'column-toggle-container',
 
             //Text in column toggle box
             toggleLabel: 'Show/Hide columns: ',
@@ -16,7 +19,10 @@
             keyPrefix: 'columntoggle-',
 
             //keyname in localstorage, if empty, it will get from URL
-            key: ''
+            key: '',
+            
+            //where place toggle container
+            toggleContainerPos: '',
 
         }, options);
 
@@ -101,11 +107,16 @@
                 toggleColumnHtml.push('<a href="#" data-columnindex="'+columnindex+'">'+toggleName+'</a>');
             });
 
-            var toggleContainer = '<div class="'+settings.toggleContainerClass+'">'+settings.toggleLabel+' '+toggleColumnHtml.join(', ')+'</div>';
-            $(this).after(toggleContainer);
+            var toggleContainer = '<div id="'+settings.toggleContainerId+'" class="'+settings.toggleContainerClass+'">'+settings.toggleLabel+' '+toggleColumnHtml.join(', ')+'</div>';
+
+            if (settings.toggleContainerPos) {
+                $(settings.toggleContainerPos).prepend(toggleContainer);
+            } else {
+                $(this).after(toggleContainer);
+            }
 
 
-            $(this).next().find('a').each(function(){
+            $('#'+settings.toggleContainerId).find('a').each(function(){
                 $(this).bind('click', function(e){
                     var columnindex = $(this).attr('data-columnindex');
                     $(table).find('td:nth-child('+columnindex+'), th:nth-child('+columnindex+')').toggle();
