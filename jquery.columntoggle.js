@@ -8,19 +8,19 @@
         var settings = $.extend({
             //Class of column toggle contains toggle link
             toggleContainerClass: 'columntoggle-container',
-            
-            //Default column toggle ID
-            toggleContainerId: 'column-toggle-container',
 
             //Text in column toggle box
             toggleLabel: 'Show/Hide columns: ',
+
+            //Default column toggle ID
+            toggleContainerId: 'column-toggle-container',
 
             //the prefix of key in localstorage
             keyPrefix: 'columntoggle-',
 
             //keyname in localstorage, if empty, it will get from URL
             key: '',
-            
+
             //where place toggle container
             toggleContainerPos: '',
 
@@ -32,13 +32,13 @@
         }
 
         var toggleLinkStatus = {
-            checkStatus: function(el, hidelist) {
-                $(el).next().find('a').each(function(){
+            checkStatus: function(hidelist) {
+                $('#'+settings.toggleContainerId).find('input').each(function(){
                     var columnindex = $(this).attr('data-columnindex');
                     if ($.inArray(columnindex + '', hidelist) >= 0) {
-                        $(this).addClass('inactive');
+                        this.checked = true;
                     } else {
-                        $(this).removeClass('inactive');
+                        this.checked = false;
                     }
                 });
             }
@@ -58,7 +58,6 @@
 
                 localStorage.setItem(settings.keyPrefix + settings.key, hidelist.join(','));
 
-                toggleLinkStatus.checkStatus(el, hidelist);
             },
             load: function(el){
                 if (settings.key.length > 0) {
@@ -70,7 +69,7 @@
                                 $(el).find('td:nth-child('+columnindex+'), th:nth-child('+columnindex+')').hide();
                             });
 
-                            toggleLinkStatus.checkStatus(el, hidelist);
+                            toggleLinkStatus.checkStatus(hidelist);
                         }
 
                     }
@@ -86,7 +85,7 @@
             if ($(this).next().hasClass(settings.toggleContainerClass)) {
                 $(this).next().remove();
             }
-            
+
             var table = $(this);
 
             //find table header to extract columns
@@ -104,10 +103,10 @@
                     toggleName = $(this).text();
                 }
 
-                toggleColumnHtml.push('<a href="#" data-columnindex="'+columnindex+'">'+toggleName+'</a>');
+                toggleColumnHtml.push('<label><input type="checkbox" data-columnindex="'+columnindex+'" >'+toggleName+'</label>');
             });
 
-            var toggleContainer = '<div id="'+settings.toggleContainerId+'" class="'+settings.toggleContainerClass+'">'+settings.toggleLabel+' '+toggleColumnHtml.join(', ')+'</div>';
+            var toggleContainer = '<div id="'+ settings.toggleContainerId + '" class="'+settings.toggleContainerClass+' ">'+settings.toggleLabel+' '+toggleColumnHtml.join(', ')+'</div>';
 
             if (settings.toggleContainerPos) {
                 $(settings.toggleContainerPos).prepend(toggleContainer);
@@ -116,15 +115,20 @@
             }
 
 
-            $('#'+settings.toggleContainerId).find('a').each(function(){
-                $(this).bind('click', function(e){
+
+            $('#'+settings.toggleContainerId).find('input').each(function(){
+                $(this).on('click', function(e){
                     var columnindex = $(this).attr('data-columnindex');
-                    $(table).find('td:nth-child('+columnindex+'), th:nth-child('+columnindex+')').toggle();
+                    var column = $(table).find('td:nth-child('+columnindex+'), th:nth-child('+columnindex+')');
+
+                    if (e.target.checked) {
+                        column.hide()
+                    } else {
+                        column.show();
+                    }
 
                     //store
                     toggleStatusStorage.save(table);
-
-                    e.preventDefault();
                 });
             });
 
